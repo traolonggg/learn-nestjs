@@ -1,8 +1,9 @@
-import { NestFactory } from '@nestjs/core';
+import { NestFactory, Reflector } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { ValidationPipe } from '@nestjs/common';
+import { ClassSerializerInterceptor, ValidationPipe } from '@nestjs/common';
 import { HtttpExceptionFilter } from './common/filters/http-exception.filter';
 import { AuthGuard } from './common/guard/auth.guard';
+import { TimingInterCeptor } from './common/interceptor/timing-interceptor';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.useGlobalGuards(new AuthGuard());
@@ -14,6 +15,7 @@ async function bootstrap() {
       transformOptions: { enableImplicitConversion: true },
     }),
   );
+  app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector)));
   app.useGlobalFilters(new HtttpExceptionFilter());
   await app.listen(process.env.PORT ?? 3000);
 }
