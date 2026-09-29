@@ -8,7 +8,7 @@ import { CategoriesModule } from './categories/categories.module';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Todo } from './todos/entities/todo.entity';
-import { User } from './users/entities/user.entities';
+import { User } from './users/entities/user.entity';
 import { Category } from './categories/entities/category.entity';
 
 @Module({
@@ -26,7 +26,7 @@ import { Category } from './categories/entities/category.entity';
       password: process.env.DB_PASSWORD,
       database: process.env.DB_NAME,
       entities: [Todo, User, Category],
-      synchronize: true,
+      synchronize: process.env.NODE_ENV !== 'production',
       logging: true,
     }),
   ],

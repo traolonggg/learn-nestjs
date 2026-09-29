@@ -2,7 +2,7 @@ import { UpdateCategoryDto } from 'src/categories/dto/update-category.dto';
 import { Category } from 'src/categories/entities/category.entity';
 import { TodoPriority } from 'src/enums/todo-priority.enum';
 import { TodoStatus } from 'src/enums/todo-status.enum';
-import { User } from 'src/users/entities/user.entities';
+import { User } from 'src/users/entities/user.entity';
 import {
   Column,
   CreateDateColumn,

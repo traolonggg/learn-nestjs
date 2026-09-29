@@ -17,7 +17,7 @@ import { TodoNotFoundException } from './exception/todo-not-found-exception';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DataSource, Repository } from 'typeorm';
 import { title } from 'process';
-import { User } from 'src/users/entities/user.entities';
+import { User } from 'src/users/entities/user.entity';
 @Injectable()
 export class TodoService {
   constructor(
