@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { TodosModule } from './todos/todos.module';
 import { TodoService } from './todos/todos.service';
@@ -10,6 +10,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Todo } from './todos/entities/todo.entity';
 import { User } from './users/entities/user.entity';
 import { Category } from './categories/entities/category.entity';
+import { RequestMiddleware } from './common/middleware/request-id.middleware';
 
 @Module({
   controllers: [AppController],
@@ -31,4 +32,9 @@ import { Category } from './categories/entities/category.entity';
     }),
   ],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  //ap dung middleware cho cap global thi dat no o app module
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(RequestMiddleware).forRoutes('*');
+  }
+}
