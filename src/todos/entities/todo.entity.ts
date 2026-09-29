@@ -7,12 +7,14 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  Index,
   JoinColumn,
   ManyToOne,
   PrimaryColumn,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+@Index(['userId'])
 @Entity()
 export class Todo {
   @PrimaryGeneratedColumn()
@@ -24,6 +26,7 @@ export class Todo {
   @Column({ type: 'enum', enum: TodoStatus, default: TodoStatus.OPEN })
   status!: TodoStatus;
   @Column({ type: 'enum', enum: TodoPriority, nullable: true })
+  @Index('idx_todo_priority_high', { where: `"priority= HIGH"` })
   priority!: TodoPriority;
   @Column()
   userId!: number;

@@ -15,8 +15,9 @@ import { createWriteStream } from 'fs';
 import { STATUS_CODES } from 'http';
 import { TodoNotFoundException } from './exception/todo-not-found-exception';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { DataSource, Repository } from 'typeorm';
 import { title } from 'process';
+import { User } from 'src/users/entities/user.entities';
 @Injectable()
 export class TodoService {
   constructor(
@@ -24,6 +25,7 @@ export class TodoService {
     private readonly todosRepository: Repository<Todo>,
     private readonly categoriesService: CategoriesService,
     private readonly usersService: UsersService,
+    private readonly dataSource: DataSource,
   ) {}
   async findAll(queryParamsDto: QueryParamsDto): Promise<Todo[]> {
     const page = queryParamsDto.page ?? 1;
@@ -80,7 +82,14 @@ export class TodoService {
         statusCode: 400,
       });
     }
-    return this.todosRepository.save(createTodoDto);
+    return this.dataSource.transaction(async (manager) => {
+      const saveTodo = await manager.save(Todo, createTodoDto);
+      await manager.update(
+        User,
+        { id: createTodoDto.userId },
+        { lastActivityAt: new Date() },
+      );
+    });
   }
   async update(id: number, updateTodoDto: UpdateTodoDto) {
     if (updateTodoDto.categoryId) {
