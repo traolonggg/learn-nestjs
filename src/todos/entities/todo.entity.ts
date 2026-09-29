@@ -27,12 +27,12 @@ export class Todo {
   priority!: TodoPriority;
   @Column()
   userId!: number;
-  @ManyToOne(() => User, (user) => user.todos)
+  @ManyToOne(() => User, (user) => user.todos, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'userId' })
   user!: User;
   @Column({ nullable: true })
   categoryId?: number;
-  @ManyToOne(() => Category, { nullable: true })
+  @ManyToOne(() => Category, { nullable: true, onDelete: 'SET NULL' })
   @JoinColumn({ name: 'categoryId' })
   category!: Category;
   @CreateDateColumn()
